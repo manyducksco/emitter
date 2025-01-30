@@ -26,7 +26,7 @@ type Events = {
 
 const emitter = new Emitter<Events>();
 
-let count: number = 0;
+let count = 0;
 
 emitter.on("counter:increment", (amount) => {
   // Amount is typed as a number.
@@ -57,40 +57,42 @@ emitter.emit("counter:increment", 1, 2, 3);
 
 ```ts
 emitter.on("eventName", listener);
-// adds a listener for a specific event
+// Adds a listener for a specific event.
 
 emitter.off("eventName", listener);
-// removes a listener for a specific event
+// Removes a listener for a specific event.
 
 emitter.once("eventName", listener);
-// adds a listener that will be called once and then removed
+// Adds a listener that will be removed after the next time it's called.
 
 emitter.clear();
-// removes all listeners for all events
+// Removes all listeners for all events.
 
 emitter.emit("eventName", ...args);
-// emits an event, taking arguments to forward to handlers
+// Emits an event, taking arguments to forward to listeners.
 
 emitter.listeners("eventName");
-// returns the array of listeners for a specific event
-
+// Returns the array of listeners for a specific event.
 emitter.listeners("eventName").length;
 emitter.listeners("eventName").unshift(listener);
-// You can use this to do things like count and prepend listeners
+// You can use this to do things like count and prepend listeners.
 
 emitter.events();
-// returns an array of eventNames for all events with listeners
+// Returns an array of eventNames for all events with listeners.
 ```
 
 Those are the methods. There are also a couple of special values for `eventName`.
 
 ```ts
 emitter.on("*", (eventName, ...args) => {
-  // adds a listener that gets called for each and every emitted event
+  // Adds a listener that gets called for each and every emitted event.
 });
 
 emitter.on("error", (error, eventName, ...args) => {
-  // adds a handler that will receive any errors thrown within any other handler.
+  // Adds a listener that will receive any errors thrown within listeners.
+  //
+  // By default, errors that occur in listeners will be thrown by the `emit` function.
+  // If there is at least one error listener then errors will be emitted instead.
 });
 ```
 

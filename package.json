@@ -25,13 +25,15 @@
   "license": "MIT",
   "exports": {
     ".": {
+      "types": "./dist/emitter.d.ts",
       "import": "./dist/emitter.js",
-      "types": "./dist/emitter.d.ts"
+      "require": "./dist/emitter.cjs"
     }
   },
   "devDependencies": {
     "typescript": "^5.7.3",
     "vite": "^6.0.11",
+    "vite-plugin-strip-comments": "^0.0.5",
     "vitest": "^3.0.4"
   }
 }
