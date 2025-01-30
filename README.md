@@ -1,5 +1,8 @@
 # @manyducks.co/emitter
 
+![bundle size](https://img.shields.io/bundlephobia/min/@manyducks.co/emitter)
+![bundle size](https://img.shields.io/bundlephobia/minzip/@manyducks.co/emitter)
+
 Emitter is a stripped down, modern event emitter with type safety for your custom events via TypeScript. Even if you don't use TypeScript, it's still a featherweight event emitter designed to work on the frontend or backend.
 
 ## Install
