@@ -50,23 +50,25 @@ export class Emitter<Events extends EventMap> {
     eventName: Name,
     ...args: Events[Name]
   ): boolean {
-    this._a(eventName);
-    let listeners = this._l.get(eventName);
-    if (listeners) {
-      for (const listener of listeners) {
-        try {
-          listener(...args);
-        } catch (err) {
-          let handlers = this._l.get("error");
-          if (handlers?.length)
-            for (const handler of handlers)
-              handler(err, eventName, listener, ...args);
-          else throw err;
-        }
+    let listeners = this.listeners(eventName);
+    for (const listener of listeners) {
+      try {
+        listener(...(args as any));
+      } catch (err) {
+        // Run error listeners, or throw if there are none.
+        let handlers = this._l.get("error");
+        if (handlers?.length)
+          for (const handler of handlers)
+            handler(err, eventName, listener, ...args);
+        else throw err;
       }
     }
-    if (eventName != "*") this.emit("*", ...([eventName, ...args] as any));
-    return !!listeners && listeners.length > 0;
+    // Emit wildcard if not currently emitting wildcard.
+    // Return true if received by wildcard listener, otherwise return whether received by specific listeners.
+    return (
+      (eventName != "*" && this.emit("*", ...([eventName, ...args] as any))) ||
+      listeners.length > 0
+    );
   }
 
   /**
@@ -94,9 +96,7 @@ export class Emitter<Events extends EventMap> {
   ): this;
 
   on(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    this._a(eventName);
-    if (!this._l.has(eventName)) this._l.set(eventName, []);
-    this._l.get(eventName)?.push(listener);
+    this.listeners(eventName).push(listener);
     return this;
   }
 
@@ -125,8 +125,8 @@ export class Emitter<Events extends EventMap> {
   ): this;
 
   off(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    const listeners = this._l.get(eventName);
-    if (listeners) listeners.splice(listeners.indexOf(listener), 1);
+    const listeners = this.listeners(eventName);
+    listeners.splice(listeners.indexOf(listener), 1);
     return this;
   }
 
@@ -157,10 +157,10 @@ export class Emitter<Events extends EventMap> {
   ): this;
 
   once(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    return this.on(
-      eventName,
-      (...args) => (listener(...args), this.off(eventName, listener))
-    );
+    return this.on(eventName, (...args) => {
+      listener(...args);
+      this.off(eventName, listener);
+    });
   }
 
   /**
@@ -189,9 +189,12 @@ export class Emitter<Events extends EventMap> {
   ): ((...args: (Events & BuiltInEvents)[Name]) => void)[];
 
   listeners<Name extends keyof (Events & BuiltInEvents)>(eventName: Name) {
-    this._a(eventName);
-    if (!this._l.has(eventName)) this._l.set(eventName, []);
-    return this._l.get(eventName)!;
+    // Attempt to return the array of listeners for `eventName`.
+    // If there is no array yet, assert the eventName is a valid type, store a new array and return it.
+    return (
+      this._l.get(eventName) ??
+      (this._a(eventName), this._l.set(eventName, []).get(eventName))
+    );
   }
 
   /**
@@ -199,7 +202,7 @@ export class Emitter<Events extends EventMap> {
    */
   events(): (keyof Events | keyof BuiltInEvents | "*")[] {
     return [...this._l.entries()]
-      .filter(([, listeners]) => listeners.length > 0)
+      .filter(([, listeners]) => listeners.length)
       .map(([eventName]) => eventName);
   }
 }
