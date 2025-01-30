@@ -56,13 +56,13 @@ emitter.emit("counter:increment", 1, 2, 3);
 ### Full API
 
 ```ts
-emitter.on("eventName", handler);
+emitter.on("eventName", listener);
 // adds a listener for a specific event
 
-emitter.off("eventName", handler);
+emitter.off("eventName", listener);
 // removes a listener for a specific event
 
-emitter.once("eventName", handler);
+emitter.once("eventName", listener);
 // adds a listener that will be called once and then removed
 
 emitter.clear();
@@ -70,20 +70,39 @@ emitter.clear();
 
 emitter.emit("eventName", ...args);
 // emits an event, taking arguments to forward to handlers
+
+emitter.listeners("eventName");
+// returns the array of listeners for a specific event
+
+emitter.listeners("eventName").length;
+emitter.listeners("eventName").unshift(listener);
+// You can use this to do things like count and prepend listeners
+
+emitter.events();
+// returns an array of eventNames for all events with listeners
+
+emitter.events().reduce((map, eventName) => {
+  map[eventName] = emitter.listeners("eventName").length;
+  return map;
+}, {});
 ```
 
 Those are the methods. There are also a couple of special values for `eventName`.
 
 ```ts
-emitter.on("*", handler);
-// adds a listener that gets called for each and every emitted event
+emitter.on("*", (eventName, ...args) => {
+  // adds a listener that gets called for each and every emitted event
+});
 
 emitter.on("error", (error, eventName, ...args) => {
-  // Handle an error.
+  // adds a handler that will receive any errors thrown within any other handler.
 });
-// adds a handler that will receive any errors thrown within any other handler.
 ```
 
 ## License
 
 Emitter is provided under the MIT license.
+
+---
+
+🦆 [That's a lot of ducks.](https://www.manyducks.co)

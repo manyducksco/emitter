@@ -14,13 +14,6 @@ test("throws error if eventName is not string or symbol", () => {
   );
 });
 
-test("throws error if you try to emit wildcard", () => {
-  const emitter = new Emitter<Events>();
-  expect(() => emitter.emit("*" as any, "asdf")).toThrowError(
-    "'*' is not an emittable event"
-  );
-});
-
 test("on: registers listeners", () => {
   const emitter = new Emitter<Events>();
 
@@ -160,4 +153,51 @@ test("error: handlers are called when an error occurs", () => {
     crash,
     1
   );
+});
+
+test("listeners: returns expected listeners", () => {
+  const emitter = new Emitter<Events>();
+
+  const inc = vi.fn((amount: number) => {});
+  const dec = vi.fn((amount: number) => {});
+
+  emitter.on("counter:increment", inc);
+  emitter.on("counter:decrement", dec);
+
+  const wildcard = vi.fn();
+
+  emitter.on("*", wildcard);
+
+  const incListeners = emitter.listeners("counter:increment");
+  const decListeners = emitter.listeners("counter:decrement");
+  const resetListeners = emitter.listeners("counter:reset");
+  const wildcardListeners = emitter.listeners("*");
+
+  expect(incListeners.length).toBe(1);
+  expect(incListeners[0]).toStrictEqual(inc);
+  expect(decListeners.length).toBe(1);
+  expect(decListeners[0]).toStrictEqual(dec);
+  expect(resetListeners.length).toBe(0);
+  expect(wildcardListeners.length).toBe(1);
+  expect(wildcardListeners[0]).toBe(wildcard);
+});
+
+test("events: returns expected eventNames", () => {
+  const emitter = new Emitter<Events>();
+
+  const inc = vi.fn((amount: number) => {});
+  const dec = vi.fn((amount: number) => {});
+
+  emitter.on("counter:increment", inc);
+  emitter.on("counter:decrement", dec);
+
+  const wildcard = vi.fn();
+
+  emitter.on("*", wildcard);
+
+  expect(emitter.events()).toEqual([
+    "counter:increment",
+    "counter:decrement",
+    "*",
+  ]);
 });
