@@ -2,8 +2,8 @@
   "name": "@manyducks.co/emitter",
   "version": "1.0.0",
   "description": "Stripped down, type-safe event emitter for client and server.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/emitter.js",
+  "types": "dist/emitter.d.ts",
   "type": "module",
   "sideEffects": false,
   "repository": {
@@ -25,8 +25,8 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./index.d.ts"
+      "import": "./dist/emitter.js",
+      "types": "./dist/emitter.d.ts"
     }
   },
   "devDependencies": {

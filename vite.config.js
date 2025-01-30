@@ -6,7 +6,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: {
-        index: resolve(__dirname, "src/emitter.ts"),
+        emitter: resolve(__dirname, "src/emitter.ts"),
       },
       name: "Emitter",
       formats: ["es"],
