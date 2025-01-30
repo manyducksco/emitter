@@ -80,11 +80,6 @@ emitter.listeners("eventName").unshift(listener);
 
 emitter.events();
 // returns an array of eventNames for all events with listeners
-
-emitter.events().reduce((map, eventName) => {
-  map[eventName] = emitter.listeners("eventName").length;
-  return map;
-}, {});
 ```
 
 Those are the methods. There are also a couple of special values for `eventName`.
