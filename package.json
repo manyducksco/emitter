@@ -1,6 +1,6 @@
 {
   "name": "@manyducks.co/emitter",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Stripped down, type-safe event emitter for client and server.",
   "main": "dist/emitter.js",
   "types": "dist/emitter.d.ts",
