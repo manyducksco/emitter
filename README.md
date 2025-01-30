@@ -54,31 +54,31 @@ emitter.emit("counter:increment", 1, 2, 3);
 
 ```ts
 emitter.on("eventName", handler);
-// .on: adds a listener for a specific event
+// adds a listener for a specific event
 
 emitter.off("eventName", handler);
-// .off: removes a listener for a specific event
+// removes a listener for a specific event
 
 emitter.once("eventName", handler);
-// .once: adds a listener that will be called once and then removed
+// adds a listener that will be called once and then removed
 
 emitter.clear();
-// .clear: removes all listeners for all events
+// removes all listeners for all events
 
 emitter.emit("eventName", ...args);
-// .emit: emits an event, taking arguments to forward to handlers
+// emits an event, taking arguments to forward to handlers
 ```
 
 Those are the methods. There are also a couple of special values for `eventName`.
 
 ```ts
 emitter.on("*", handler);
-// "*": adds a listener that gets called for each and every emitted event
+// adds a listener that gets called for each and every emitted event
 
 emitter.on("error", (error, eventName, ...args) => {
   // Handle an error.
 });
-// "error": adds a handler that will receive any errors thrown within any other handler.
+// adds a handler that will receive any errors thrown within any other handler.
 ```
 
 ## License
