@@ -1,0 +1,37 @@
+{
+  "name": "@manyducks.co/emitter",
+  "version": "1.0.0",
+  "description": "Stripped down, type-safe event emitter for client and server.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manyducksco/emitter.git"
+  },
+  "scripts": {
+    "test": "vitest",
+    "build": "vite build && tsc",
+    "prepublishOnly": "NODE_ENV=production npm run build"
+  },
+  "keywords": [
+    "events",
+    "event emitter",
+    "type safe",
+    "typescript"
+  ],
+  "author": "tony@manyducks.co",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./index.d.ts"
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11",
+    "vitest": "^3.0.4"
+  }
+}
